@@ -2,12 +2,12 @@ const places = [
     {
         id: 1,
         address: '420 Roehampton Ave',
-        tenants: [ 1, 2 ],
+        tenants: [ 3, 2 ],
     },
     {
         id: 2,
         address: '9033 Leslie St',
-        tenants: [ 3 ],
+        tenants: [ 1 ],
     },
 ];
 

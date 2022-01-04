@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 
 const resolvers = {
     Query: {
-        peoples: (obj, args, context, info) => {
+        persons: (obj, args, context, info) => {
             const {
                 id
             } = args;
@@ -23,7 +23,7 @@ const resolvers = {
             return result
         },
     },
-    People: {
+    Person: {
         // this is what the default resolver does
         id: (obj, args, context, info) => { return obj.id },
         // address is the only node in People that needs a custom resolver

@@ -1,6 +1,6 @@
 const schema = `
 
-type People {
+type Person {
   id: ID!
   name: String
   nationality: String
@@ -11,16 +11,16 @@ type People {
 type Place {
   id: ID!
   address: String
-  tenants: [People]
+  tenants: [Person]
 }
 
 type Query {
-  peoples(id: ID): [People]
+  persons(id: ID): [Person]
   places(id: ID): [Place]
 }
 
 type Mutation {
-  insertPeople: [People]
+  insertPerson: [Person]
 }
 
 `;
