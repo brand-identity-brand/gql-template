@@ -1,3 +1,4 @@
+//we need this to fetch data from our own API endpoints
 const fetch = require('node-fetch');
 
 const resolvers = {
