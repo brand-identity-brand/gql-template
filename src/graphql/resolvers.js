@@ -3,14 +3,19 @@ const fetch = require('node-fetch');
 
 const resolvers = {
     Query: {
-        persons: (obj, args, context, info) => {
+        persons: async (obj, args, context, info) => {
             const {
-                id
+                id,
+                nationality
             } = args;
-            console.log('ran peoples');
             const baseUrl = `${domain}/fakepi/people`;
+            if ( nationality ) {
+                const everyone = await fetch(baseUrl).then(res => res.json());
+                const result = everyone.filter( theOne =>  theOne.nationality == nationality )
+                return result
+            }
             const useUrl = id==undefined ? baseUrl : `${baseUrl}/${id}`;
-            const result = fetch(useUrl).then(res => res.json());
+            const result = await fetch(useUrl).then(res => res.json());
             return result
         },
         places: (obj, args, context, info) => {

@@ -15,7 +15,7 @@ type Place {
 }
 
 type Query {
-  persons(id: ID): [Person]
+  persons(id: ID, nationality: String): [Person]
   places(id: ID): [Place]
 }
 

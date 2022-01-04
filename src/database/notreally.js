@@ -9,6 +9,11 @@ const places = [
         address: '9033 Leslie St',
         tenants: [ 1 ],
     },
+    {
+        id: 3,
+        address: '',
+        tenants: [ 4 ],
+    },
 ];
 
 const people = [
@@ -25,6 +30,11 @@ const people = [
     {
         id: 3,
         name: 'Kathy',
+        nationality: 'China',
+    },
+    {
+        id: 4,
+        name: 'Jonathan',
         nationality: 'China',
     },
 ];
