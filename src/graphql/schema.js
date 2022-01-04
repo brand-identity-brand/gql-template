@@ -26,8 +26,3 @@ type Mutation {
 `;
 
 exports.default = schema;
-
-/**
- * 
-
- */
