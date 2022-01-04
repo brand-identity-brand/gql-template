@@ -1,0 +1,31 @@
+{
+  "name": "gql-template",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js",
+    "dev": "nodemon  src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brand-identity-brand/gql-template.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brand-identity-brand/gql-template/issues"
+  },
+  "homepage": "https://github.com/brand-identity-brand/gql-template#readme",
+  "dependencies": {
+    "@graphql-tools/schema": "^8.3.1",
+    "express": "^4.17.2",
+    "express-graphql": "^0.12.0",
+    "graphql": "^16.2.0",
+    "node-fetch": "^2.6.6"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "description": ""
+}
