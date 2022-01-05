@@ -38,14 +38,22 @@ const people = [
         nationality: 'China',
     },
 ];
+//const 
+const getIdFunc = (arrayOfObjects, id) => {
+    return arrayOfObjects.filter( object => object["id"] == id);
+}
 
 exports.default = { places, people };
-exports.getId = getId;
+exports["getId"] = getIdFunc;
 
-function getId(arrayOfObjects, id) {
+/**
+ * another method for func declaration in jscript. Can also declare as const (see above) 
+function getIdFunc (arrayOfObjects, id) {
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
-    const result = arrayOfObjects.filter( object => object.id == id );
-    // the above is the same as:
+    
+    const result = arrayOfObjects.filter( object => object["id"] == id);
+    
+    // the above is the same as:"
     //
     // const result = arrayOfObjects.filter( (object) => { 
     //    return object.id == id 
@@ -59,3 +67,4 @@ function getId(arrayOfObjects, id) {
     // however, in thise case, it is better to return the array because it will make graphql less complicated
     return result 
 }
+**/

@@ -16,18 +16,21 @@ const { getId } = require('./database/notreally.js');
 const app = express(); //line 2
 app.use(express.json()); //express.json() middleware 
 //
+const randomObject = {"hello": 0};
 app.use('/graphql', graphqlHTTP((req, res) => {
     return {
         schema: makeExecutableSchema( {typeDefs: schema, resolvers} ),
-        graphiql: true, //enables "domain.com/graphiql"
+        graphiql: true, //enables "domain.com/graphiql"\
+        context: randomObject
     }
 }));
 app.get('/fakepi/:key/:id', (req, res) => {
     // collect params from GET request (sent through url) 
-    const key = req.params.key;
-    const id = req.params.id;
     //
-    const result = getId(notreallyDB[key], id);
+    //const key = req.params.key;
+    //const id = req.params.id;
+    //
+    const result = getId(notreallyDB[req.params.key], req.params.id);
     return res.send( result );
 })
 

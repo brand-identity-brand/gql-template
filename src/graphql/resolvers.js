@@ -11,32 +11,49 @@ const resolvers = {
             const baseUrl = `${domain}/fakepi/people`;
             if ( nationality ) {
                 const everyone = await fetch(baseUrl).then(res => res.json());
-                const result = everyone.filter( theOne =>  theOne.nationality == nationality )
-                return result
+                const result = everyone.filter( theOne =>  theOne["nationality"] == nationality );
+                return result;
             }
             const useUrl = id==undefined ? baseUrl : `${baseUrl}/${id}`;
             const result = await fetch(useUrl).then(res => res.json());
-            return result
+            return result;
         },
-        places: (obj, args, context, info) => {
-            const {
-                id
-            } = args;
+        //implicit async, essentially threads
+        //notice {id} versus id. The latter uses destructuring inside of the function versus in the argument. Both are examples of object destructuring
+        places: async (obj, {id}, context, info) => {
             const baseUrl = `${domain}/fakepi/places`;
             const useUrl = id==undefined ? baseUrl : `${baseUrl}/${id}`;
             const result = fetch(useUrl).then(res => res.json());
-            return result
+            return result;
         },
     },
     Person: {
         // this is what the default resolver does
         id: (obj, args, context, info) => { return obj.id },
         // address is the only node in People that needs a custom resolver
-        address: async (obj, args, context, info) => { 
-            return 'complete the resolver function'
+        address: async (obj, args, context, info) => {
+            //may receive a person object from persons or places => Place => tenants or an empty object
+            //assumption that the object being passed in is standardized (contains: id, name, nationality) as specified by api
+            //may be missing a field that is standardized though (empty id) 
+            //get person object id
+            //store object id (if found) ==> if not can't find tenant
+            //look up places and find the correct id value stored in Person object 
+            //return address from Place object
+            const {id} = obj;
+            if(id == null){return null;}
+            const baseUrl = `${domain}/fakepi/places`;
+            const useUrl = id==undefined ? baseUrl: `${baseUrl}`;
+            let result = await fetch(useUrl)
+                .then(response => response.json());
+            for(var i = 0; i < result.length; ++i){
+                if(result[i].tenants.includes(id)){
+                    return result[i].address;
+                }
+            }
         },
     },
     Place: {
+        //actually an array of People
         tenants: (obj, args, context, info) => {
             // tentant will need a custom resolver even the keys from schema and api matches
             // that is because the return data is not the data you intend to show
@@ -55,4 +72,5 @@ const resolvers = {
 }
 
 exports.default = resolvers;
+//gets hoisted
 var domain = 'http://localhost:4000';
