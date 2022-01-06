@@ -1,5 +1,8 @@
 //we need this to fetch data from our own API endpoints
 const fetch = require('node-fetch');
+const fs = require('fs');
+const path = require('path')
+
 
 const resolvers = {
     Query: {
@@ -39,17 +42,23 @@ const resolvers = {
             //store object id (if found) ==> if not can't find tenant
             //look up places and find the correct id value stored in Person object 
             //return address from Place object
+            
             const {id} = obj;
+            //could also return '' for consistency with returned value later
+            //not necessary required as id is always required
             if(id == null){return null;}
             const baseUrl = `${domain}/fakepi/places`;
-            const useUrl = id==undefined ? baseUrl: `${baseUrl}`;
-            let result = await fetch(useUrl)
+            const result = await fetch(baseUrl)
                 .then(response => response.json());
+
+            //sean preference for foreach
             for(var i = 0; i < result.length; ++i){
                 if(result[i].tenants.includes(id)){
                     return result[i].address;
                 }
             }
+
+            return null;
         },
     },
     Place: {
@@ -69,6 +78,84 @@ const resolvers = {
             return result
         },
     },
+    Mutation:{
+        createPerson:(obj, args, context, info) => {
+            /*
+            Since we have content already in the file
+            thus we should read and store all contents in a string
+            perform some string manipulation to determine where we want to
+            put the new content, then append the content
+            
+            We can't use writestream in this case as that appends to end of file
+            */
+            //const logStream = fs.createWriteStream(dataFilePath, {flags: 'a'});
+            const dataFilePath = path.join(__dirname, '..', 'database', 'data.js');
+            try{
+                if(fs.existsSync(dataFilePath)){
+                    console.log("found file");
+                }
+            }catch(err){
+                console.error(err);
+                return;
+            }
+            fs.readFile(dataFilePath, function read(err, data){
+                if(err){
+                    console.error(err);
+                    return;
+                }
+                var file_content = data.toString();
+                let tokens = file_content.split("\n")
+                let start = 0;
+                //find start of people block
+                for(var i = 0; i < tokens.length; ++i){
+                    if(tokens[i].localeCompare("const people = [")==0){
+                        start = i;
+                        break;
+                    }
+                }
+                //find end of people block, using additional variable for clarity purposes
+                let end = 0;
+                for(; i < tokens.length; ++i){
+                    if(tokens[i].localeCompare("];") == 0){
+                        end = i;
+                        break;
+                    }
+                }
+                //storing last few tokens in below var
+                var lastFewTokens = []
+                for(i = end; i < tokens.length; ++i){
+                    lastFewTokens.push(tokens[i]);    
+                }
+
+                var argsTokens = JSON.stringify(args)
+                argsTokens = argsTokens.split("\"");
+                for(i = 0; i < argsTokens.length; ++i){
+                    if(argsTokens[i].localeCompare("name") == 0){
+                        break;
+                    }
+                }
+                if(argsTokens[i+2].localeCompare("}" != 0)){
+                    argsTokens[i+2] = "\'" + argsTokens[i+2] + "\'";
+                }
+                tokens[end] = argsTokens.join("") + ",";
+                
+                for(i = end +2, j = 0;j < lastFewTokens.length; ++i, ++j){
+                    tokens[i] = lastFewTokens[j];
+                }
+                var combinedString = tokens.join('\n');
+                try{
+                    fs.writeFileSync(dataFilePath, combinedString)
+                }catch(err){
+                    console.error(err)
+                    return;
+                }
+                console.log("success");
+                
+                
+            });            
+
+        }
+    }
 }
 
 exports.default = resolvers;

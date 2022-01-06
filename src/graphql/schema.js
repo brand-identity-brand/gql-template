@@ -20,7 +20,7 @@ type Query {
 }
 
 type Mutation {
-  insertPerson: [Person]
+  createPerson(id: ID!, name: String):[Person]
 }
 
 `;
