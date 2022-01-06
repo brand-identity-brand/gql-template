@@ -37,8 +37,6 @@ const people = [
         name: 'Jonathan',
         nationality: 'China',
     },
-{id:5,name:'peter'},
-
 ];
 
 module.exports = { places, people };
